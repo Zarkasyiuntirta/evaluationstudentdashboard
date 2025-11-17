@@ -126,9 +126,9 @@ const ScoreRankingChart: React.FC<{ students: Student[], selectedStudentId?: num
     
         return (
             <div className="relative group flex flex-col items-center flex-shrink-0" style={{ height: `${barHeight + skewAmount + 30}px`}}>
+                {/* Tooltip for full name */}
                 <div className={`absolute bottom-full mb-2 w-max bg-gray-900 border border-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10`}>
                     <p className="font-bold text-cyan-300">{name}</p>
-                    <p>Score: {score}</p>
                 </div>
     
                 <div className="relative transition-transform duration-300 group-hover:-translate-y-2" style={{ width: `${barWidth}px`, height: `${barHeight}px` }}>
@@ -150,6 +150,13 @@ const ScoreRankingChart: React.FC<{ students: Student[], selectedStudentId?: num
                         }}
                     ></div>
                     <div className={`w-full h-full bg-gradient-to-t ${highlightClasses} transition-all`}></div>
+                    
+                    {/* Score value centered in the bar, visible on hover */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <span className="text-white font-bold text-sm" style={{textShadow: '0 0 5px black'}}>
+                            {score}
+                        </span>
+                    </div>
                 </div>
                 
                 <p className="text-xs text-gray-400 mt-2 truncate w-16 text-center group-hover:text-white transition-colors">{name.split(' ')[0]}</p>
