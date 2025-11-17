@@ -60,13 +60,13 @@ const AbsenteeismMenu: React.FC<AbsenteeismMenuProps> = ({ students, onUpdateStu
                     <TableCell><p className="font-semibold">{student.name}</p></TableCell>
                     <TableCell><p className="text-gray-400">{student.nim}</p></TableCell>
                     <TableCell>
-                      {isEditing ? <input type="number" value={student.attendance.izin} onChange={(e) => handleInputChange(student.id, 'izin', e.target.value)} className="w-16 bg-gray-700/50 p-1 rounded"/> : student.attendance.izin}
+                      {isEditing ? <input type="number" value={student.attendance.izin} onChange={(e) => handleInputChange(student.id, 'izin', e.target.value)} className="w-16 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.attendance.izin}</p>}
                     </TableCell>
                     <TableCell>
-                      {isEditing ? <input type="number" value={student.attendance.sakit} onChange={(e) => handleInputChange(student.id, 'sakit', e.target.value)} className="w-16 bg-gray-700/50 p-1 rounded"/> : student.attendance.sakit}
+                      {isEditing ? <input type="number" value={student.attendance.sakit} onChange={(e) => handleInputChange(student.id, 'sakit', e.target.value)} className="w-16 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.attendance.sakit}</p>}
                     </TableCell>
-                    <TableCell>{student.attendance.hadir}</TableCell>
-                    <TableCell>{TOTAL_MEETINGS}</TableCell>
+                    <TableCell><p className="text-gray-400">{student.attendance.hadir}</p></TableCell>
+                    <TableCell><p className="text-gray-400">{TOTAL_MEETINGS}</p></TableCell>
                     <TableCell><p className="font-bold text-lg text-cyan-300">{calculateAbsensiScore(student.attendance.hadir)}</p></TableCell>
                 </TableRow3D>
             ))}

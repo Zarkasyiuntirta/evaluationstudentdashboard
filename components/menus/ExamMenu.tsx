@@ -53,16 +53,16 @@ const ExamMenu: React.FC<ExamMenuProps> = ({ students, onUpdateStudents }) => {
               <TableCell><p className="font-semibold">{student.name}</p></TableCell>
               <TableCell><p className="text-gray-400">{student.nim}</p></TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.exams.mid1} onChange={(e) => handleInputChange(student.id, 'mid1', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.exams.mid1}
+                {isEditing ? <input type="number" value={student.exams.mid1} onChange={(e) => handleInputChange(student.id, 'mid1', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.exams.mid1}</p>}
               </TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.exams.final1} onChange={(e) => handleInputChange(student.id, 'final1', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.exams.final1}
+                {isEditing ? <input type="number" value={student.exams.final1} onChange={(e) => handleInputChange(student.id, 'final1', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.exams.final1}</p>}
               </TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.exams.mid2} onChange={(e) => handleInputChange(student.id, 'mid2', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.exams.mid2}
+                {isEditing ? <input type="number" value={student.exams.mid2} onChange={(e) => handleInputChange(student.id, 'mid2', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.exams.mid2}</p>}
               </TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.exams.final2} onChange={(e) => handleInputChange(student.id, 'final2', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.exams.final2}
+                {isEditing ? <input type="number" value={student.exams.final2} onChange={(e) => handleInputChange(student.id, 'final2', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.exams.final2}</p>}
               </TableCell>
               <TableCell><p className="font-bold text-lg text-cyan-300">{calculateExamAverage(student.exams)}</p></TableCell>
             </TableRow3D>

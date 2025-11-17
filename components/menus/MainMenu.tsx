@@ -102,6 +102,77 @@ const ExamChart: React.FC<{ scores: Student['exams'] }> = ({ scores }) => {
     );
 };
 
+const ScoreRankingChart: React.FC<{ students: Student[], selectedStudentId?: number }> = ({ students, selectedStudentId }) => {
+    const sortedStudentsWithScores = useMemo(() => {
+        return students
+            .map(student => ({
+                id: student.id,
+                name: student.name,
+                score: calculateSummaryScore(student),
+            }))
+            .sort((a, b) => b.score - a.score);
+    }, [students]);
+
+    const Bar: React.FC<{score: number, name: string, isHighlighted: boolean}> = ({ score, name, isHighlighted }) => {
+        const barHeight = score * 1.5;
+        const barWidth = 20;
+        const skewAmount = 8;
+    
+        const highlightClasses = isHighlighted 
+            ? 'from-cyan-400 to-blue-400 shadow-[0_0_15px_rgba(0,255,255,0.6)]' 
+            : 'from-cyan-600 to-blue-600';
+        const highlightSide = isHighlighted ? 'bg-cyan-500' : 'bg-cyan-800';
+        const highlightTop = isHighlighted ? 'bg-blue-300' : 'bg-blue-400';
+    
+        return (
+            <div className="relative group flex flex-col items-center flex-shrink-0" style={{ height: `${barHeight + skewAmount + 30}px`}}>
+                <div className={`absolute bottom-full mb-2 w-max bg-gray-900 border border-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10`}>
+                    <p className="font-bold text-cyan-300">{name}</p>
+                    <p>Score: {score}</p>
+                </div>
+    
+                <div className="relative transition-transform duration-300 group-hover:-translate-y-2" style={{ width: `${barWidth}px`, height: `${barHeight}px` }}>
+                    <div 
+                        className={`absolute top-0 left-full w-full h-full ${highlightSide} transition-colors`}
+                        style={{
+                            transform: `skewY(45deg)`,
+                            transformOrigin: 'top left',
+                            width: `${skewAmount}px`,
+                        }}
+                    ></div>
+                    <div 
+                        className={`absolute top-0 left-0 w-full h-full ${highlightTop} transition-colors`}
+                        style={{
+                            transform: `skewX(45deg)`,
+                            transformOrigin: 'top left',
+                            height: `${skewAmount}px`,
+                            top: `-${skewAmount}px`
+                        }}
+                    ></div>
+                    <div className={`w-full h-full bg-gradient-to-t ${highlightClasses} transition-all`}></div>
+                </div>
+                
+                <p className="text-xs text-gray-400 mt-2 truncate w-16 text-center group-hover:text-white transition-colors">{name.split(' ')[0]}</p>
+            </div>
+        );
+    };
+
+    return (
+        <StatCard title="Class Score Distribution" className="mt-8">
+            <div className="w-full flex items-end gap-3 px-4 h-[220px] overflow-x-auto pb-2">
+                {sortedStudentsWithScores.map(student => (
+                    <Bar 
+                        key={student.id} 
+                        score={student.score} 
+                        name={student.name} 
+                        isHighlighted={student.id === selectedStudentId}
+                    />
+                ))}
+            </div>
+        </StatCard>
+    );
+};
+
 
 // Main Menu Component
 const MainMenu: React.FC<MainMenuProps> = ({ user, students }) => {
@@ -216,6 +287,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ user, students }) => {
                     </div>
                 </div>
             </div>
+            <ScoreRankingChart students={students} selectedStudentId={selectedStudentId} />
         </div>
     );
 };

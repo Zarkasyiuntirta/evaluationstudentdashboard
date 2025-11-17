@@ -56,10 +56,10 @@ const TaskMenu: React.FC<TaskMenuProps> = ({ students, onUpdateStudents }) => {
                         <TableCell><p className="font-semibold">{student.name}</p></TableCell>
                         <TableCell><p className="text-gray-400">{student.nim}</p></TableCell>
                         <TableCell>
-                            {isEditing ? <input type="number" value={student.tasks.selesai} onChange={(e) => handleInputChange(student.id, e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded" max={TOTAL_TASKS}/> : student.tasks.selesai}
+                            {isEditing ? <input type="number" value={student.tasks.selesai} onChange={(e) => handleInputChange(student.id, e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200" max={TOTAL_TASKS}/> : <p className="text-gray-400">{student.tasks.selesai}</p>}
                         </TableCell>
-                        <TableCell>{incomplete}</TableCell>
-                        <TableCell>{TOTAL_TASKS}</TableCell>
+                        <TableCell><p className="text-gray-400">{incomplete}</p></TableCell>
+                        <TableCell><p className="text-gray-400">{TOTAL_TASKS}</p></TableCell>
                         <TableCell><p className="font-bold text-lg text-cyan-300">{calculateTaskScore(student.tasks)}</p></TableCell>
                     </TableRow3D>
                 );

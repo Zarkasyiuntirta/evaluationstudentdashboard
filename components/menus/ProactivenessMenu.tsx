@@ -56,16 +56,16 @@ const ProactivenessMenu: React.FC<ProactivenessMenuProps> = ({ students, onUpdat
               <TableCell><p className="font-semibold">{student.name}</p></TableCell>
               <TableCell><p className="text-gray-400">{student.nim}</p></TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.proactiveness.bertanya} onChange={(e) => handleInputChange(student.id, 'bertanya', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.proactiveness.bertanya}
+                {isEditing ? <input type="number" value={student.proactiveness.bertanya} onChange={(e) => handleInputChange(student.id, 'bertanya', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.proactiveness.bertanya}</p>}
               </TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.proactiveness.menjawab} onChange={(e) => handleInputChange(student.id, 'menjawab', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.proactiveness.menjawab}
+                {isEditing ? <input type="number" value={student.proactiveness.menjawab} onChange={(e) => handleInputChange(student.id, 'menjawab', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.proactiveness.menjawab}</p>}
               </TableCell>
               <TableCell>
-                {isEditing ? <input type="number" value={student.proactiveness.menambahkan} onChange={(e) => handleInputChange(student.id, 'menambahkan', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded"/> : student.proactiveness.menambahkan}
+                {isEditing ? <input type="number" value={student.proactiveness.menambahkan} onChange={(e) => handleInputChange(student.id, 'menambahkan', e.target.value)} className="w-20 bg-gray-700/50 p-1 rounded text-gray-200"/> : <p className="text-gray-400">{student.proactiveness.menambahkan}</p>}
               </TableCell>
-              <TableCell>{getTotalProactive(student.proactiveness)}</TableCell>
-              <TableCell>{TOTAL_MEETINGS}</TableCell>
+              <TableCell><p className="text-gray-400">{getTotalProactive(student.proactiveness)}</p></TableCell>
+              <TableCell><p className="text-gray-400">{TOTAL_MEETINGS}</p></TableCell>
               <TableCell><p className="font-bold text-lg text-cyan-300">{calculateProactivenessScore(student.proactiveness)}</p></TableCell>
             </TableRow3D>
           ))}
