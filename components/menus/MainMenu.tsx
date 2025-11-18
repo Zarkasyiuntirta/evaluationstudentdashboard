@@ -85,19 +85,96 @@ const ExamChart: React.FC<{ scores: Student['exams'] }> = ({ scores }) => {
         { label: 'Mid 2', score: scores.mid2 },
         { label: 'Final 2', score: scores.final2 },
     ];
+    
+    const width = 500;
+    const height = 150;
+    const padding = { top: 20, right: 20, bottom: 30, left: 30 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+    const points = examData.map((d, i) => {
+        const x = padding.left + (i / (examData.length - 1)) * chartWidth;
+        const y = padding.top + chartHeight - (d.score / 100) * chartHeight;
+        return { x, y, score: d.score, label: d.label };
+    });
+
+    const linePath = points.map((p, i) => (i === 0 ? 'M' : 'L') + `${p.x} ${p.y}`).join(' ');
+    const areaPath = `${linePath} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
+    
+    const floorPath = `M ${padding.left - 10},${height - padding.bottom + 5} L ${padding.left + 20},${height - padding.bottom - 15} L ${width - padding.right + 20},${height - padding.bottom - 15} L ${width - padding.right - 10},${height - padding.bottom + 5} Z`;
+    
+    const yAxisLabels = [0, 25, 50, 75, 100];
 
     return (
-        <div className="h-32 flex justify-around items-end gap-4 pt-4 px-2">
-            {examData.map((exam, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center group relative">
-                    <div className="absolute -top-6 text-white text-sm mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">{exam.score}</div>
-                    <div 
-                        className="w-full bg-gradient-to-t from-cyan-500 to-blue-500 rounded-t-md transition-all duration-500 ease-out group-hover:shadow-[0_0_15px_rgba(0,255,255,0.6)]"
-                        style={{ height: `${exam.score}%` }}
-                    ></div>
-                    <p className="text-xs text-gray-400 mt-2 whitespace-nowrap">{exam.label}</p>
-                </div>
-            ))}
+        <div className="relative w-full h-full flex items-center justify-center">
+             <style>
+                {`
+                @keyframes draw-line { to { stroke-dashoffset: 0; } }
+                .line-path {
+                    stroke-dasharray: 1000;
+                    stroke-dashoffset: 1000;
+                    animation: draw-line 2s ease-out forwards;
+                }
+                `}
+            </style>
+            <svg width="100%" viewBox={`0 0 ${width} ${height}`}>
+                <defs>
+                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#67e8f9" />
+                        <stop offset="100%" stopColor="#3b82f6" />
+                    </linearGradient>
+                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="rgba(34, 211, 238, 0.3)" />
+                        <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
+                    </linearGradient>
+                     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <path d={floorPath} fill="rgba(0, 255, 255, 0.05)" />
+
+                <g className="text-gray-600">
+                    {yAxisLabels.map(label => {
+                        const y = padding.top + chartHeight - (label / 100) * chartHeight;
+                        return (
+                             <g key={label}>
+                                <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="currentColor" strokeWidth="0.5" strokeDasharray="2,2" opacity="0.3" />
+                                <text x={padding.left - 8} y={y + 4} textAnchor="end" fontSize="10" fill="currentColor" opacity="0.7">{label}</text>
+                            </g>
+                        );
+                    })}
+                </g>
+
+                <path d={areaPath} fill="url(#areaGradient)" />
+                <path d={linePath} fill="none" stroke="url(#lineGradient)" strokeWidth="3" strokeLinecap="round" className="line-path" />
+
+                {points.map((p, i) => (
+                    <g key={i} onMouseEnter={() => setHoveredIndex(i)} onMouseLeave={() => setHoveredIndex(null)} className="cursor-pointer">
+                        <circle cx={p.x} cy={p.y} r="10" fill="transparent" />
+                        <circle cx={p.x} cy={p.y} r={hoveredIndex === i ? 6 : 4} fill={hoveredIndex === i ? "#67e8f9" : "white"} stroke={hoveredIndex === i ? "white" : "#3b82f6"} strokeWidth="2" filter={hoveredIndex === i ? "url(#glow)" : "none"} style={{transition: 'all 0.2s ease'}}/>
+                        
+                        {hoveredIndex === i && (
+                            <g>
+                                <rect x={p.x - 15} y={p.y - 30} width="30" height="20" rx="3" fill="rgba(0,0,0,0.7)" />
+                                <text x={p.x} y={p.y - 16} textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">{p.score}</text>
+                            </g>
+                        )}
+                    </g>
+                ))}
+
+                <g className="text-gray-400">
+                    {points.map((p, i) => (
+                        <text key={i} x={p.x} y={height - padding.bottom + 15} textAnchor="middle" fontSize="12" fill="currentColor">{p.label}</text>
+                    ))}
+                </g>
+            </svg>
         </div>
     );
 };
@@ -261,7 +338,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ user, students }) => {
 
                 {/* Right Side: Charts */}
                 <div className="lg:col-span-2 space-y-8">
-                    <StatCard title="Exam Result">
+                    <StatCard title="Exam Result" className="h-48 flex items-center justify-center">
                        <ExamChart scores={studentToDisplay.exams} />
                     </StatCard>
                     
